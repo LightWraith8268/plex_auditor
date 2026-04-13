@@ -1,0 +1,20 @@
+[project]
+name = "plex-tools-workspace"
+version = "0"
+requires-python = ">=3.11"
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.uv.sources]
+plex-audit = { workspace = true }
+plex-audit-cli = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-cov>=5",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "types-PyYAML",
+]
