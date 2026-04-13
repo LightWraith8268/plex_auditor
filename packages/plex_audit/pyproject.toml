@@ -21,3 +21,4 @@ packages = ["src/plex_audit"]
 orphaned_files = "plex_audit.checks.orphaned_files:OrphanedFilesCheck"
 missing_episodes = "plex_audit.checks.missing_episodes:MissingEpisodesCheck"
 unmatched_items = "plex_audit.checks.unmatched_items:UnmatchedItemsCheck"
+missing_artwork = "plex_audit.checks.missing_artwork:MissingArtworkCheck"
