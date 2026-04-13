@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 from plex_audit.context import ScanContext
+from plex_audit.plex_client import Library
 from plex_audit.types import Category, Finding, Severity
 
 _RESOLUTION_ORDER = {"sd": 0, "480": 480, "576": 576, "720": 720, "1080": 1080, "1440": 1440, "2160": 2160, "4k": 2160}
@@ -60,7 +61,7 @@ class QualityThresholdCheck:
                     ctx.report(finding)
                     yield finding
 
-    def _iter_playable(self, library):
+    def _iter_playable(self, library: Library) -> Iterable[object]:
         if library.kind == "movie":
             yield from library.raw.all()
         else:

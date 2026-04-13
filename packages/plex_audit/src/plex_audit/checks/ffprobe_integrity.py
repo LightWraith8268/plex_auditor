@@ -6,6 +6,7 @@ from collections.abc import Iterable
 from pathlib import Path
 
 from plex_audit.context import ScanContext
+from plex_audit.plex_client import Library
 from plex_audit.types import Category, Finding, Severity
 
 
@@ -62,7 +63,7 @@ class FfprobeIntegrityCheck:
                     ctx.report(finding)
                     yield finding
 
-    def _iter_playable(self, library):  # type: ignore[no-untyped-def]
+    def _iter_playable(self, library: Library) -> Iterable[object]:
         if library.kind == "movie":
             yield from library.raw.all()
         elif library.kind == "show":
