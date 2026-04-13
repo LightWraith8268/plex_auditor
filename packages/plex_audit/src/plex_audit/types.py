@@ -4,7 +4,10 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from enum import Enum, IntEnum
 from pathlib import Path
-from typing import Any, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Protocol, runtime_checkable
+
+if TYPE_CHECKING:
+    from plex_audit.context import ScanContext
 
 
 class Severity(IntEnum):
@@ -26,7 +29,7 @@ class Finding:
     severity: Severity
     title: str
     subject: str
-    details: dict[str, Any] = field(default_factory=dict)
+    details: dict[str, Any] = field(default_factory=dict, hash=False, compare=False)
     plex_item_id: str | None = None
     file_path: Path | None = None
     suggested_action: str | None = None
@@ -40,4 +43,4 @@ class Check(Protocol):
     parallel_safe: bool
     requires_filesystem: bool
 
-    def run(self, ctx: ScanContext) -> Iterable[Finding]: ...  # type: ignore[name-defined]  # noqa: F821
+    def run(self, ctx: ScanContext) -> Iterable[Finding]: ...
