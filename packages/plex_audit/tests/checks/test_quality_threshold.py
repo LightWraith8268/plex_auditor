@@ -1,5 +1,5 @@
 from plex_audit.checks.quality_threshold import QualityThresholdCheck
-from plex_audit.types import Category, Severity
+from plex_audit.types import Category
 
 from .conftest import PlexFake, make_ctx
 
