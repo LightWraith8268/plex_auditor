@@ -1,0 +1,39 @@
+name: Auto-merge claude/dev to main
+
+on:
+  push:
+    branches: [claude/dev]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check if main is ahead or diverged
+        id: divergence
+        run: |
+          git fetch origin main
+          AHEAD=$(git rev-list --count origin/main..HEAD)
+          BEHIND=$(git rev-list --count HEAD..origin/main)
+          echo "ahead=$AHEAD" >> "$GITHUB_OUTPUT"
+          echo "behind=$BEHIND" >> "$GITHUB_OUTPUT"
+
+      - name: Create PR and merge
+        if: steps.divergence.outputs.ahead != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          LAST_MSG=$(git log -1 --pretty=%s)
+          PR_URL=$(gh pr create \
+            --base main \
+            --head claude/dev \
+            --title "$LAST_MSG" \
+            --body "Automated merge from claude/dev.") || PR_URL=$(gh pr list --head claude/dev --base main --json url --jq '.[0].url')
+          gh pr merge "$PR_URL" --admin --merge --delete-branch=false
