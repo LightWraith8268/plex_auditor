@@ -21,11 +21,9 @@ jobs:
         run: |
           git fetch origin main
           AHEAD=$(git rev-list --count origin/main..HEAD)
-          BEHIND=$(git rev-list --count HEAD..origin/main)
           echo "ahead=$AHEAD" >> "$GITHUB_OUTPUT"
-          echo "behind=$BEHIND" >> "$GITHUB_OUTPUT"
 
-      - name: Create PR and merge
+      - name: Create PR and enable auto-merge
         if: steps.divergence.outputs.ahead != '0'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -35,11 +33,6 @@ jobs:
             --base main \
             --head claude/dev \
             --title "$LAST_MSG" \
-            --body "Automated merge from claude/dev.") || PR_URL=$(gh pr list --head claude/dev --base main --json url --jq '.[0].url')
-          gh pr merge "$PR_URL" --admin --merge --delete-branch=false
-
-      - name: Dispatch release workflow
-        if: steps.divergence.outputs.ahead != '0'
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh workflow run release.yml --ref main
+            --body "Automated merge from claude/dev. Will merge once required checks pass.") \
+            || PR_URL=$(gh pr list --head claude/dev --base main --json url --jq '.[0].url')
+          gh pr merge "$PR_URL" --auto --merge --delete-branch=false
