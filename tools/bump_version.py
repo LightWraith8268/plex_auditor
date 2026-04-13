@@ -62,6 +62,14 @@ def _latest_tag() -> str | None:
     return result.stdout.strip() or None
 
 
+def _root_commit() -> str:
+    result = subprocess.run(
+        ["git", "rev-list", "--max-parents=0", "HEAD"],
+        capture_output=True, text=True, check=True,
+    )
+    return result.stdout.strip().splitlines()[0]
+
+
 def _read_current_version() -> str:
     pyproject = Path("packages/plex_audit/pyproject.toml").read_text(encoding="utf-8")
     match = re.search(r'^version\s*=\s*"([^"]+)"', pyproject, re.MULTILINE)
@@ -87,7 +95,7 @@ def main() -> int:
     args = parser.parse_args()
 
     tag = _latest_tag()
-    ref = tag if tag is not None else "HEAD~50"
+    ref = tag if tag is not None else _root_commit()
     commits = _read_commits_since(ref)
     bump = decide_bump(commits)
     if bump is None:
