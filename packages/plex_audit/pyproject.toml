@@ -18,4 +18,4 @@ build-backend = "hatchling.build"
 packages = ["src/plex_audit"]
 
 [project.entry-points."plex_audit.checks"]
-# Checks register here as they land. Populated in Task 9.
+orphaned_files = "plex_audit.checks.orphaned_files:OrphanedFilesCheck"
