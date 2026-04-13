@@ -3,4 +3,4 @@ from plex_audit.reporters.html import HtmlReporter
 from plex_audit.reporters.json import JsonReporter
 from plex_audit.reporters.markdown import MarkdownReporter
 
-__all__ = ["Reporter", "MarkdownReporter", "JsonReporter", "HtmlReporter"]
+__all__ = ["HtmlReporter", "JsonReporter", "MarkdownReporter", "Reporter"]

@@ -6,6 +6,8 @@ from pathlib import Path
 from typing import Annotated
 
 import typer
+
+from plex_audit.cli.wizard import run_wizard
 from plex_audit.config import Config, ConfigError, load_config
 from plex_audit.context import FindingsSink, ScanContext
 from plex_audit.engine import Engine
@@ -17,10 +19,8 @@ from plex_audit.reporters.json import JsonReporter
 from plex_audit.reporters.markdown import MarkdownReporter
 from plex_audit.types import Severity
 
-from plex_audit_cli.wizard import run_wizard
-
 app = typer.Typer(help="Plex Media Server library auditor")
-log = logging.getLogger("plex_audit_cli")
+log = logging.getLogger("plex_audit.cli")
 
 EXIT_CLEAN = 0
 EXIT_WARNINGS = 1
@@ -116,7 +116,7 @@ def scan(
 
 app.command(name="init")(run_wizard)
 
-from plex_audit_cli.scheduler import show_schedule  # noqa: E402
+from plex_audit.cli.scheduler import show_schedule  # noqa: E402
 
 app.command(name="schedule")(show_schedule)
 

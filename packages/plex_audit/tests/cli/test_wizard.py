@@ -2,8 +2,8 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import yaml
+from plex_audit.cli.main import app
 from plex_audit.plex_client import Library
-from plex_audit_cli.main import app
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -29,7 +29,7 @@ def test_wizard_writes_config(tmp_path: Path):
         str(tmp_path / "reports"),
     ]) + "\n"
 
-    with patch("plex_audit_cli.wizard.PlexClient") as plex_cls:
+    with patch("plex_audit.cli.wizard.PlexClient") as plex_cls:
         plex_cls.return_value = _fake_plex_with_one_library()
         result = runner.invoke(app, ["init", "--config", str(cfg_path)], input=inputs)
 
@@ -47,7 +47,7 @@ def test_wizard_writes_config(tmp_path: Path):
 def test_wizard_aborts_when_plex_unreachable(tmp_path: Path):
     cfg_path = tmp_path / "config.yaml"
     inputs = "http://x\nbad-token\n"
-    with patch("plex_audit_cli.wizard.PlexClient") as plex_cls:
+    with patch("plex_audit.cli.wizard.PlexClient") as plex_cls:
         plex_cls.return_value.iter_libraries.side_effect = ConnectionError("nope")
         result = runner.invoke(app, ["init", "--config", str(cfg_path)], input=inputs)
     assert result.exit_code != 0

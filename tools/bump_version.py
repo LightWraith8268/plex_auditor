@@ -73,9 +73,7 @@ def _read_current_version() -> str:
 def _write_version(new_version: str) -> None:
     for path in (
         Path("packages/plex_audit/pyproject.toml"),
-        Path("packages/plex_audit_cli/pyproject.toml"),
         Path("packages/plex_audit/src/plex_audit/__init__.py"),
-        Path("packages/plex_audit_cli/src/plex_audit_cli/__init__.py"),
     ):
         text = path.read_text(encoding="utf-8")
         text = re.sub(r'(^version\s*=\s*")[^"]+(")', rf'\g<1>{new_version}\g<2>', text, count=1, flags=re.MULTILINE)

@@ -5,6 +5,7 @@ from typing import Annotated
 
 import typer
 import yaml
+
 from plex_audit.config import PlexConfig
 from plex_audit.plex_client import PlexClient
 

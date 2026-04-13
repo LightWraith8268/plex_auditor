@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import html
 from collections import defaultdict
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 from plex_audit.types import Finding, Severity
@@ -48,7 +48,7 @@ class HtmlReporter:
 
     def write(self, findings: list[Finding], output_path: Path) -> None:
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        timestamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
+        timestamp = datetime.now(UTC).isoformat(timespec="seconds")
 
         if not findings:
             body = '<div class="clean">No findings. Library looks clean.</div>'

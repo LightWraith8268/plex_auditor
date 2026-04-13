@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from plex_audit_cli.main import app
+from plex_audit.cli.main import app
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -57,7 +57,7 @@ logging:
     # Plex "knows about" /media/tv/known.mkv. It does NOT know /media/tv/orphan.mkv.
     library = _make_library_with_one_known_file("/media/tv/known.mkv")
 
-    with patch("plex_audit_cli.main.PlexClient") as plex_cls:
+    with patch("plex_audit.cli.main.PlexClient") as plex_cls:
         instance = plex_cls.return_value
         instance.iter_libraries.return_value = [library]
 

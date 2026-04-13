@@ -102,13 +102,10 @@ jobs:
           body_path: release_body.md
 
   pypi:
-    name: Publish to PyPI (${{ matrix.package }})
+    name: Publish to PyPI
     needs: [bump, github_release]
     if: needs.bump.outputs.bumped == 'true'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        package: [plex_audit, plex_audit_cli]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -118,13 +115,13 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Build sdist and wheel
-        working-directory: packages/${{ matrix.package }}
+        working-directory: packages/plex_audit
         run: uv build
 
       - name: Publish
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          packages-dir: packages/${{ matrix.package }}/dist
+          packages-dir: packages/plex_audit/dist
 
   binaries:
     name: Build binary (${{ matrix.asset_name }})
@@ -164,8 +161,7 @@ jobs:
         run: |
           uv run pyinstaller --onefile --name "${{ matrix.asset_name }}" \
             --collect-all plex_audit \
-            --collect-all plex_audit_cli \
-            packages/plex_audit_cli/src/plex_audit_cli/main.py
+            packages/plex_audit/src/plex_audit/cli/main.py
 
       - name: Upload to release
         uses: softprops/action-gh-release@v2

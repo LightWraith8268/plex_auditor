@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest.mock import patch
 
-from plex_audit_cli.main import app
+from plex_audit.cli.main import app
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -30,7 +30,7 @@ def test_writes_all_three_formats(tmp_path: Path):
     cfg = tmp_path / "config.yaml"
     cfg.write_text(CONFIG.format(out=out.as_posix()), encoding="utf-8")
 
-    with patch("plex_audit_cli.main.PlexClient") as plex_cls:
+    with patch("plex_audit.cli.main.PlexClient") as plex_cls:
         plex_cls.return_value.iter_libraries.return_value = []
         result = runner.invoke(app, ["scan", "--config", str(cfg)])
 

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from plex_audit_cli.main import app
+from plex_audit.cli.main import app
 from typer.testing import CliRunner
 
 runner = CliRunner()
