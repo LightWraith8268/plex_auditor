@@ -37,3 +37,9 @@ jobs:
             --title "$LAST_MSG" \
             --body "Automated merge from claude/dev.") || PR_URL=$(gh pr list --head claude/dev --base main --json url --jq '.[0].url')
           gh pr merge "$PR_URL" --admin --merge --delete-branch=false
+
+      - name: Dispatch release workflow
+        if: steps.divergence.outputs.ahead != '0'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run release.yml --ref main
