@@ -116,6 +116,10 @@ def scan(
 
 app.command(name="init")(run_wizard)
 
+from plex_audit_cli.scheduler import show_schedule  # noqa: E402
+
+app.command(name="schedule")(show_schedule)
+
 
 if __name__ == "__main__":
     app()
