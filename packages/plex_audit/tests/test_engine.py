@@ -19,8 +19,7 @@ class _FakeCheck:
     def run(self, ctx: ScanContext):
         if self.raises:
             raise self.raises
-        for f in self.findings:
-            yield f
+        yield from self.findings
 
 
 def _ctx(filesystem: bool = True) -> ScanContext:
@@ -84,3 +83,27 @@ def test_engine_skips_filesystem_checks_when_unavailable():
     findings = ctx._sink.all()
     assert not any(f.check_id == "fs" and f.severity == Severity.WARN for f in findings)
     assert any(f.check_id == "engine" and f.severity == Severity.INFO and "fs" in f.subject for f in findings)
+
+
+def test_parallel_checks_both_findings_collected():
+    """Two parallel checks must both get their findings in the sink."""
+    ctx = _ctx()
+    finding_a = Finding(check_id="a", severity=Severity.WARN, title="t", subject="sa")
+    finding_b = Finding(check_id="b", severity=Severity.INFO, title="t", subject="sb")
+    engine = Engine(checks=[
+        _FakeCheck(id="a", parallel_safe=True, findings=(finding_a,)),
+        _FakeCheck(id="b", parallel_safe=True, findings=(finding_b,)),
+    ])
+    engine.run(ctx, enabled="all", disabled=[])
+    subjects = {f.subject for f in ctx._sink.all()}
+    assert "sa" in subjects and "sb" in subjects
+
+
+def test_serial_check_runs():
+    ctx = _ctx()
+    engine = Engine(checks=[
+        _FakeCheck(id="serial", parallel_safe=False,
+                   findings=(Finding(check_id="serial", severity=Severity.WARN, title="t", subject="s"),)),
+    ])
+    engine.run(ctx, enabled="all", disabled=[])
+    assert any(f.check_id == "serial" for f in ctx._sink.all())

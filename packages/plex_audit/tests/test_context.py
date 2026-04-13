@@ -53,3 +53,24 @@ def test_scan_context_exposes_services_and_report_method():
     )
     ctx.report(_finding())
     assert len(sink.all()) == 1
+
+
+def test_sink_is_thread_safe_under_concurrent_adds():
+    import threading
+    sink = FindingsSink()
+
+    def make_finding(i: int) -> Finding:
+        return Finding(check_id=f"c{i}", severity=Severity.WARN, title="t", subject=f"s{i}")
+
+    def worker(start: int, stop: int) -> None:
+        for i in range(start, stop):
+            sink.add(make_finding(i))
+
+    threads = [threading.Thread(target=worker, args=(i * 100, (i + 1) * 100)) for i in range(8)]
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    # 8 workers * 100 unique findings = 800 distinct findings expected.
+    assert len(sink.all()) == 800

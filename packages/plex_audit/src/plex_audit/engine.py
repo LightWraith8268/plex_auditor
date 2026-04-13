@@ -25,8 +25,8 @@ class Engine:
             try:
                 check_cls = entry.load()
                 discovered.append(check_cls())
-            except Exception as exc:  # pragma: no cover — defensive
-                log.warning("Failed to load check %s: %s", entry.name, exc)
+            except Exception:  # pragma: no cover — defensive
+                log.warning("Failed to load check %s", entry.name, exc_info=True)
         return cls(discovered)
 
     def _select(
