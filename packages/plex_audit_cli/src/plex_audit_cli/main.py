@@ -94,18 +94,11 @@ def scan(
     engine.run(ctx, enabled=config.checks.enabled, disabled=config.checks.disabled)
 
     all_findings = sink.all()
-    # Exclude engine-internal skip notices (check_id="engine", severity=INFO)
-    # from user-facing reports; they are operational metadata, not audit findings.
-    report_findings = [
-        finding
-        for finding in all_findings
-        if not (finding.check_id == "engine" and finding.severity == Severity.INFO)
-    ]
     for fmt in config.report.formats:
         if fmt == "md":
-            MarkdownReporter().write(report_findings, _output_path(config, "md"))
+            MarkdownReporter().write(all_findings, _output_path(config, "md"))
 
-    typer.echo(f"Scan complete. {len(report_findings)} finding(s).")
+    typer.echo(f"Scan complete. {len(all_findings)} finding(s).")
     raise typer.Exit(code=_exit_code_for(sink.highest_severity()))
 
 

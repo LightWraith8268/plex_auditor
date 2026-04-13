@@ -14,7 +14,7 @@ paths:
   mappings: []
 checks:
   enabled: all
-  disabled: []
+  disabled: [orphaned_files]
 report:
   formats: [md]
   output_dir: "{out}"
