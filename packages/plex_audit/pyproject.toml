@@ -8,7 +8,11 @@ dependencies = [
     "pydantic>=2.8",
     "PyYAML>=6.0",
     "PlexAPI>=4.15",
+    "typer>=0.12",
 ]
+
+[project.scripts]
+plex-audit = "plex_audit.cli.main:app"
 
 [build-system]
 requires = ["hatchling"]
@@ -19,3 +23,12 @@ packages = ["src/plex_audit"]
 
 [project.entry-points."plex_audit.checks"]
 orphaned_files = "plex_audit.checks.orphaned_files:OrphanedFilesCheck"
+missing_episodes = "plex_audit.checks.missing_episodes:MissingEpisodesCheck"
+unmatched_items = "plex_audit.checks.unmatched_items:UnmatchedItemsCheck"
+missing_artwork = "plex_audit.checks.missing_artwork:MissingArtworkCheck"
+match_confidence = "plex_audit.checks.match_confidence:MatchConfidenceCheck"
+missing_files = "plex_audit.checks.missing_files:MissingFilesCheck"
+quality_threshold = "plex_audit.checks.quality_threshold:QualityThresholdCheck"
+ffprobe_integrity = "plex_audit.checks.ffprobe_integrity:FfprobeIntegrityCheck"
+duplicates = "plex_audit.checks.duplicates:DuplicatesCheck"
+near_duplicates = "plex_audit.checks.near_duplicates:NearDuplicatesCheck"

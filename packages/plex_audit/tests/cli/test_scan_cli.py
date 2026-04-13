@@ -1,7 +1,7 @@
 from pathlib import Path
 from unittest.mock import patch
 
-from plex_audit_cli.main import app
+from plex_audit.cli.main import app
 from typer.testing import CliRunner
 
 runner = CliRunner()
@@ -13,8 +13,8 @@ plex:
 paths:
   mappings: []
 checks:
-  enabled: all
-  disabled: [orphaned_files]
+  enabled: []
+  disabled: []
 report:
   formats: [md]
   output_dir: "{out}"
@@ -35,7 +35,7 @@ def _write_config(tmp_path: Path) -> Path:
 def test_scan_returns_zero_on_clean_run(tmp_path: Path):
     cfg = _write_config(tmp_path)
 
-    with patch("plex_audit_cli.main.PlexClient") as plex_cls:
+    with patch("plex_audit.cli.main.PlexClient") as plex_cls:
         plex_cls.return_value.iter_libraries.return_value = []
         result = runner.invoke(app, ["scan", "--config", str(cfg)])
 
@@ -52,7 +52,7 @@ def test_scan_exits_four_on_missing_config(tmp_path: Path):
 
 def test_scan_exits_three_when_plex_unreachable(tmp_path: Path):
     cfg = _write_config(tmp_path)
-    with patch("plex_audit_cli.main.PlexClient") as plex_cls:
+    with patch("plex_audit.cli.main.PlexClient") as plex_cls:
         plex_cls.return_value.iter_libraries.side_effect = ConnectionError("nope")
         result = runner.invoke(app, ["scan", "--config", str(cfg)])
     assert result.exit_code == 3

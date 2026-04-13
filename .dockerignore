@@ -1,0 +1,17 @@
+.git
+.venv
+.venv/
+__pycache__
+**/__pycache__
+.pytest_cache
+.ruff_cache
+.mypy_cache
+*.egg-info
+dist
+build
+reports
+docs
+.github
+tests
+**/tests
+plex-audit.log

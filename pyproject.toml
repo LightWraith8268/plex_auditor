@@ -8,7 +8,6 @@ members = ["packages/*"]
 
 [tool.uv.sources]
 plex-audit = { workspace = true }
-plex-audit-cli = { workspace = true }
 
 [dependency-groups]
 dev = [

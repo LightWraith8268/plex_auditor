@@ -5,7 +5,6 @@ requires-python = ">=3.11"
 [manifest]
 members = [
     "plex-audit",
-    "plex-audit-cli",
     "plex-tools-workspace",
 ]
 
@@ -447,6 +446,7 @@ dependencies = [
     { name = "plexapi" },
     { name = "pydantic" },
     { name = "pyyaml" },
+    { name = "typer" },
 ]
 
 [package.metadata]
@@ -454,20 +454,6 @@ requires-dist = [
     { name = "plexapi", specifier = ">=4.15" },
     { name = "pydantic", specifier = ">=2.8" },
     { name = "pyyaml", specifier = ">=6.0" },
-]
-
-[[package]]
-name = "plex-audit-cli"
-version = "0.1.0"
-source = { editable = "packages/plex_audit_cli" }
-dependencies = [
-    { name = "plex-audit" },
-    { name = "typer" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "plex-audit", editable = "packages/plex_audit" },
     { name = "typer", specifier = ">=0.12" },
 ]
 
