@@ -74,7 +74,15 @@ def main() -> int:
             ["git", "describe", "--tags", "--abbrev=0"],
             capture_output=True, text=True, check=False,
         )
-        ref = tag_result.stdout.strip() if tag_result.returncode == 0 and tag_result.stdout.strip() else "HEAD~50"
+        tag = tag_result.stdout.strip() if tag_result.returncode == 0 else ""
+        if tag:
+            ref = tag
+        else:
+            root_result = subprocess.run(
+                ["git", "rev-list", "--max-parents=0", "HEAD"],
+                capture_output=True, text=True, check=True,
+            )
+            ref = root_result.stdout.strip().splitlines()[0]
 
     commits = _commits_since(ref)
     section = build_section(args.version, date.today().isoformat(), commits)
