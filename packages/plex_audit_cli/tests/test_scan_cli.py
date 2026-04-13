@@ -13,8 +13,8 @@ plex:
 paths:
   mappings: []
 checks:
-  enabled: all
-  disabled: [orphaned_files]
+  enabled: []
+  disabled: []
 report:
   formats: [md]
   output_dir: "{out}"
