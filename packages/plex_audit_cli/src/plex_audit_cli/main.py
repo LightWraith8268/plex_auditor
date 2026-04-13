@@ -11,6 +11,9 @@ from plex_audit.context import FindingsSink, ScanContext
 from plex_audit.engine import Engine
 from plex_audit.path_mapper import PathMapper, PathMapping
 from plex_audit.plex_client import PlexClient
+from plex_audit.reporters.base import Reporter
+from plex_audit.reporters.html import HtmlReporter
+from plex_audit.reporters.json import JsonReporter
 from plex_audit.reporters.markdown import MarkdownReporter
 from plex_audit.types import Severity
 
@@ -94,9 +97,16 @@ def scan(
     engine.run(ctx, enabled=config.checks.enabled, disabled=config.checks.disabled)
 
     all_findings = sink.all()
+    reporters: dict[str, type[Reporter]] = {
+        "md": MarkdownReporter,
+        "json": JsonReporter,
+        "html": HtmlReporter,
+    }
     for fmt in config.report.formats:
-        if fmt == "md":
-            MarkdownReporter().write(all_findings, _output_path(config, "md"))
+        reporter_cls = reporters.get(fmt)
+        if reporter_cls is None:
+            continue
+        reporter_cls().write(all_findings, _output_path(config, fmt))
 
     typer.echo(f"Scan complete. {len(all_findings)} finding(s).")
     raise typer.Exit(code=_exit_code_for(sink.highest_severity()))
