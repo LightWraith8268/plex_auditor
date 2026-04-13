@@ -53,8 +53,8 @@ def test_finds_files_on_disk_not_in_plex(tmp_path: Path):
 
     ctx = _ctx(
         tmp_path,
-        plex_files=[str(media_root / "known.mkv")],
-        mappings=[PathMapping(plex=str(media_root), local=str(media_root))],
+        plex_files=["/media/tv/known.mkv"],
+        mappings=[PathMapping(plex="/media/tv", local=str(media_root))],
     )
     list(OrphanedFilesCheck().run(ctx))
     findings = ctx._sink.all()

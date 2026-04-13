@@ -29,16 +29,9 @@ class OrphanedFilesCheck:
             for item in library.raw.all():
                 for media_file in ctx.plex.get_media_files(item):
                     local = ctx.path_mapper.to_local(media_file.plex_path)
-                    if local is not None:
-                        known_local_files.add(Path(str(local)))
-                    else:
-                        # Plex path may already be a local absolute path (e.g. on
-                        # Windows where PathMapper expects POSIX-style separators
-                        # but the path contains backslashes). Add it directly so
-                        # the known-file set stays accurate.
-                        plex_as_path = Path(media_file.plex_path)
-                        if plex_as_path.is_absolute():
-                            known_local_files.add(plex_as_path)
+                    if local is None:
+                        continue
+                    known_local_files.add(Path(str(local)))
 
         for mapping in ctx.config.paths.mappings:
             local_root = Path(mapping.local)
