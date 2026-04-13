@@ -35,9 +35,7 @@ class ChecksConfig(BaseModel):
 
 
 class ReportConfig(BaseModel):
-    formats: list[Literal["md", "json", "html"]] = Field(
-        default_factory=lambda: ["md"]  # type: ignore[arg-type]
-    )
+    formats: list[Literal["md", "json", "html"]] = Field(default=["md"])
     output_dir: str = "./reports"
     filename_template: str = "plex-audit-{timestamp}"
 

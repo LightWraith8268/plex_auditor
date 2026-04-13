@@ -76,3 +76,17 @@ def test_enabled_accepts_list_or_all(tmp_path: Path):
 def test_missing_file_raises(tmp_path: Path):
     with pytest.raises(ConfigError):
         load_config(tmp_path / "does-not-exist.yaml")
+
+
+def test_env_var_bool_false_actually_disables(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("PLEX_AUDIT_PLEX__VERIFY_SSL", "false")
+    cfg = load_config(_write(tmp_path, SAMPLE_YAML))
+    assert cfg.plex.verify_ssl is False
+
+
+def test_env_var_bool_true_enables(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    # Start with verify_ssl omitted (default True), override env to "true" (no-op)
+    body = SAMPLE_YAML.replace("verify_ssl: true\n  ", "")
+    monkeypatch.setenv("PLEX_AUDIT_PLEX__VERIFY_SSL", "true")
+    cfg = load_config(_write(tmp_path, body))
+    assert cfg.plex.verify_ssl is True
