@@ -26,7 +26,7 @@ jobs:
       - name: Create PR and enable auto-merge
         if: steps.divergence.outputs.ahead != '0'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.AUTO_MERGE_TOKEN }}
         run: |
           LAST_MSG=$(git log -1 --pretty=%s)
           PR_URL=$(gh pr create \
