@@ -17,6 +17,8 @@ from plex_audit.reporters.json import JsonReporter
 from plex_audit.reporters.markdown import MarkdownReporter
 from plex_audit.types import Severity
 
+from plex_audit_cli.wizard import run_wizard
+
 app = typer.Typer(help="Plex Media Server library auditor")
 log = logging.getLogger("plex_audit_cli")
 
@@ -110,6 +112,9 @@ def scan(
 
     typer.echo(f"Scan complete. {len(all_findings)} finding(s).")
     raise typer.Exit(code=_exit_code_for(sink.highest_severity()))
+
+
+app.command(name="init")(run_wizard)
 
 
 if __name__ == "__main__":
